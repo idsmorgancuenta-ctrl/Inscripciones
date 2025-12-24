@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscripción al Evento</title>
+
+<style>
+:root {
+    --beige: #f7f4ef;
+    --verde: #6b8f3a;
+    --verde-oscuro: #4f6f2f;
+    --marron: #5a4a3f;
+    --gris: #999;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f7f4ef, #ece8e1);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 🍃 HOJAS */
+.leaves {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.leaf {
+    position: absolute;
+    top: -50px;
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(circle at 30% 30%, #9dbb6d, #6b8f3a);
+    border-radius: 0 100% 0 100%;
+    opacity: 0.8;
+    animation: fall linear infinite;
+}
+
+/* FORM CARD */
+.card {
+    position: relative;
+    z-index: 2;
+    width: 380px;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(12px);
+    border-radius: 22px;
+    padding: 35px 30px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    animation: slideUp 0.8s ease;
+}
+
+/* LOGO */
+.logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo img {
+    width: 130px;
+}
+
+/* TITLE */
+h2 {
+    text-align: center;
+    color: var(--marron);
+    margin-bottom: 30px;
+}
+
+/* INPUT GROUP */
+.input-group {
+    position: relative;
+    margin-bottom: 22px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 12px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    background: transparent;
+    transition: 0.3s;
+}
+
+.input-group label {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    color: var(--gris);
+    font-size: 14px;
+    pointer-events: none;
+    transform: translateY(-50%);
+    transition: 0.3s;
+    background: white;
+    padding: 0 6px;
+}
+
+.input-group input:focus,
+.input-group input:not(:placeholder-shown) {
+    border-color: var(--verde);
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+    top: -6px;
+    font-size: 12px;
+    color: var(--verde);
+}
+
+/* BUTTON */
+button {
+    width: 100%;
+    padding: 15px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg, var(--verde), var(--verde-oscuro));
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+}
+
+/* MESSAGE */
+.message {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+    opacity: 0;
+    transition: 0.5s;
+}
+
+.message.show {
+    opacity: 1;
+}
+
+.message.success {
+    color: var(--verde);
+}
+
+.message.error {
+    color: #d9534f;
+}
+
+/* ANIMATIONS */
+@keyframes fall {
+    0% {
+        transform: translateX(0) rotate(0deg);
+        top: -50px;
+    }
+    100% {
+        transform: translateX(80px) rotate(360deg);
+        top: 110vh;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🍃 HOJAS -->
+<div class="leaves" id="leaves"></div>
+
+<!-- FORM -->
+<div class="card">
+    <div class="logo">
+        <img src="logo.png" alt="Logo del Evento">
+    </div>
+
+    <h2>Inscripción al Evento</h2>
+
+    <form id="form">
+        <div class="input-group">
+            <input type="text" id="nombre" required placeholder=" ">
+            <label>Nombre Completo</label>
+        </div>
+
+        <div class="input-group">
+            <input type="number" id="edad" min="1" required placeholder=" ">
+            <label>Edad</label>
+        </div>
+
+        <div class="input-group">
+            <input type="tel" id="telefono" required placeholder=" ">
+            <label>Número de Teléfono</label>
+        </div>
+
+        <button type="submit">Inscribirse</button>
+        <div class="message" id="message"></div>
+    </form>
+</div>
+
+<!-- 🍃 HOJAS SCRIPT -->
+<script>
+const leavesContainer = document.getElementById("leaves");
+
+for (let i = 0; i < 20; i++) {
+    const leaf = document.createElement("div");
+    leaf.classList.add("leaf");
+
+    leaf.style.left = Math.random() * 100 + "vw";
+    leaf.style.animationDuration = 6 + Math.random() * 6 + "s";
+    leaf.style.animationDelay = Math.random() * 5 + "s";
+    leaf.style.opacity = 0.4 + Math.random() * 0.6;
+    leaf.style.transform = `scale(${0.6 + Math.random()})`;
+
+    leavesContainer.appendChild(leaf);
+}
+</script>
+
+<!-- 🔥 FIREBASE + FORM HANDLER -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBvyfstOLA7J8x2HLlRtkjgBB8hUCoP33o",
+  authDomain: "fhcraices.firebaseapp.com",
+  projectId: "fhcraices",
+  storageBucket: "fhcraices.firebasestorage.app",
+  messagingSenderId: "477301728398",
+  appId: "1:477301728398:web:711cf6a9a076ce181095df",
+  measurementId: "G-J2BVSQ4QK4"
+};
+
+const app = initializeApp(firebaseConfig);
+getAnalytics(app);
+const db = getFirestore(app);
+
+const form = document.getElementById("form");
+const message = document.getElementById("message");
+
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const nombre = document.getElementById("nombre").value.trim();
+    const edad = document.getElementById("edad").value;
+    const telefono = document.getElementById("telefono").value.trim();
+
+    if (!nombre || !edad || !telefono) {
+        message.textContent = "⚠️ Completa todos los campos";
+        message.className = "message error show";
+        return;
+    }
+
+    try {
+        await addDoc(collection(db, "inscripciones"), {
+            nombre,
+            edad: Number(edad),
+            telefono,
+            fecha: serverTimestamp()
+        });
+
+        message.textContent = "✅ Inscripción enviada correctamente";
+        message.className = "message success show";
+        form.reset();
+
+        setTimeout(() => {
+            message.classList.remove("show");
+        }, 4000);
+
+    } catch (error) {
+        console.error(error);
+        message.textContent = "❌ Error al guardar la inscripción";
+        message.className = "message error show";
+        setTimeout(() => {
+            message.classList.remove("show");
+        }, 4000);
+    }
+});
+</script>
+
+</body>
+</html>
